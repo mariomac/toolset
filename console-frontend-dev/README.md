@@ -2,8 +2,8 @@
 
 To create the container:
 ```
-cd openshift/console/frontend
-docker run -v $(pwd):/frontend:cached  -it --name console-frontend-dev quay.io/mmaciasl/console-frontend-dev:latest
+cd openshift/console
+docker run -v $(pwd):/console:cached  -it --name console-frontend-dev quay.io/mmaciasl/console-frontend-dev:latest
 ```
 
 To reattach to it:
