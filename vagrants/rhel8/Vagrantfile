@@ -1,0 +1,15 @@
+Vagrant.configure("2") do |config|
+    config.vm.box = "generic/rhel8"
+    # commented to avoid registering/unregistering on each vagrant up/halt cycle
+    # config.registration.username = ENV['SUB_USERNAME']
+    # config.registration.password = ENV['SUB_PASSWORD']
+
+    config.vm.provider "virtualbox" do |v|
+        v.name = "RHEL 8"
+        v.cpus = 2
+        v.memory = 4096
+    end
+
+    # sharing info with host
+    config.vm.synced_folder "~", "/vagrant", type: "virtualbox"
+end
