@@ -5,7 +5,7 @@ metadata:
 spec:
   resources:
     requests:
-      storage: 1G
+      storage: 20G
   volumeMode: Filesystem
   accessModes:
     - ReadWriteOnce
@@ -47,6 +47,11 @@ data:
         active_index_directory: /loki-store/index
         shared_store: filesystem
         cache_location: /loki-store/boltdb-cache
+    limits_config:
+      reject_old_samples: true
+      reject_old_samples_max_age: 15m
+      ingestion_rate_mb: 20
+      ingestion_burst_size_mb: 100
   datasource.yaml: |
     apiVersion: 1
     datasources:
@@ -75,27 +80,27 @@ spec:
         runAsUser: 1000
         fsGroup: 1000
       volumes:
-      - name: loki-store
-        persistentVolumeClaim:
-          claimName: loki-store
-      - name: loki-config
-        configMap:
-          name: loki-config
+        - name: loki-store
+          persistentVolumeClaim:
+            claimName: loki-store
+        - name: loki-config
+          configMap:
+            name: loki-config
       containers:
-      - name: loki
-        image: grafana/loki:2.4.1
-        volumeMounts:
-          - mountPath: "/loki-store"
-            name: loki-store
-          - mountPath: "/etc/loki"
-            name: loki-config
-        ports:
-        - containerPort: 3100
-      - name: grafana
-        image: grafana/grafana:main
-        volumeMounts:
-          - mountPath: "/etc/grafana/provisioning/datasources"
-            name: loki-config
+        - name: loki
+          image: grafana/loki:2.4.1
+          volumeMounts:
+            - mountPath: "/loki-store"
+              name: loki-store
+            - mountPath: "/etc/loki"
+              name: loki-config
+          ports:
+            - containerPort: 3100
+#        - name: grafana
+#          image: grafana/grafana:main
+#          volumeMounts:
+#            - mountPath: "/etc/grafana/provisioning/datasources"
+#              name: loki-config
 ---
 # oc port-forward deployment/loki 3100 3000
 kind: Service
