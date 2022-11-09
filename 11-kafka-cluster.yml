@@ -26,12 +26,16 @@ spec:
       default.replication.factor: 1
       min.insync.replicas: 1
       inter.broker.protocol.version: "3.1"
+      allow.auto.create.topics: false
     storage:
       type: ephemeral
     resources:
+      requests:
+        cpu: 250m
+        memory: 256m
       limits:
-        cpu: 4000m
-        memory: 4096Mi
+        cpu: 1000m
+        memory: 1024Mi
   zookeeper:
     replicas: 1
     storage:
