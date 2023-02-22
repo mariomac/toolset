@@ -1,0 +1,28 @@
+arch: "x86_64"
+vmType: "qemu" #"vz" not working
+rosetta:
+  # Enable Rosetta for Linux.
+  # Hint: try `softwareupdate --install-rosetta` if Lima gets stuck at `Installing rosetta...`
+  enabled: true
+  # Register rosetta to /proc/sys/fs/binfmt_misc
+  binfmt: true
+images:
+- location: "https://download.fedoraproject.org/pub/fedora/linux/releases/37/Cloud/x86_64/images/Fedora-Cloud-Base-37-1.7.x86_64.qcow2"
+  arch: "x86_64"
+  digest: "sha256:b5b9bec91eee65489a5745f6ee620573b23337cbb1eb4501ce200b157a01f3a0"
+# speeds up VM start
+containerd:
+  system: false
+  user: false
+mounts:
+- location: "~/"
+- location: "/tmp/lima"
+  writable: true
+provision:
+- mode: system
+  script: |
+    #!/bin/sh
+    systemctl stop cloud-final.service
+    systemctl disable cloud-final.service
+    dnf update -y
+    dnf install -y bpftrace golang
